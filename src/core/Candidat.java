@@ -69,7 +69,7 @@ public class Candidat {
 	}
 	@Override
 	public String toString() {
-		return name + "==> " + vowsPerRound + " vows: " +vows /*"which is "+percentage+"%"*/;
+		return name + "==> " + " vows: " +vows + " Eleminated: "+isEliminated;
 	}
 	
 	

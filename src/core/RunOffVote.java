@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-
 public class RunOffVote {
 	String file = "run_off.txt";
 
@@ -24,6 +22,7 @@ public class RunOffVote {
 	public RunOffVote(String file) {
 		this.file = file;
 		loadData();
+		setVotePerRound();
 		// runOff(5);
 
 	}
@@ -70,7 +69,13 @@ public class RunOffVote {
 					"");// delete the first candidat in the String
 		}
 		for (int j = 0; j < Candidats.size(); j++)
-			Candidats.elementAt(j).setVowsPerRound(Candidats.size());
+			Candidats.elementAt(j).setVowsPerRound(Candidats.size());// fill the
+																		// vector
+																		// of
+																		// size
+																		// "candidats
+																		// by
+																		// 0's
 	}
 
 	private void setVoteOrder() {
@@ -92,96 +97,79 @@ public class RunOffVote {
 			// Depending on the round, get the number voted
 			int count = voteOrder.elementAt(i).elementAt(round) - 1;
 
-			// System.out.println(count);
-			if (count < Candidats.size() && count >= 0) {
-				Candidat candidat = Candidats.elementAt(count);
+			Candidat candidat = Candidats.elementAt(count);
 
-				if (candidat.getId() == count) {
-					int vow = candidat.getVows() + 1;
-					//candidat.setVows(vow);
-					candidat.vowsPerRound.set(round,
-							candidat.vowsPerRound.get(round) + 1);
-					candidat.calculatePercentage(voteOrder.size());
-				}
+			if (candidat.getId() == count && !candidat.isEliminated) {
+				int vow = candidat.getVows() + 1;
+				candidat.setVows(vow);
+
+				// candidat.calculatePercentage(voteOrder.size());
 			}
 
 		}
 
-		// System.out.println("Initial candidats: " + Candidats);
-		// proceedElimination();
+	}
 
-		// System.out.println("Current candidats: " + Candidats);
-		// System.out.println(voteOrder);
-		//
-		// System.out.println("After eliminations: ");
-		// System.out.println(Candidats);
+	public void setVotePerRound() {
 
+		for (int round = 0; round < Candidats.size(); round++)
+			for (int i = 0; i < voteOrder.size(); i++) {
+
+				// Depending on the round, get the number voted
+				int count = voteOrder.elementAt(i).elementAt(round) - 1;
+
+				Candidat candidat = Candidats.elementAt(count);
+
+				if (candidat.getId() == count) {
+					candidat.vowsPerRound.set(round,
+							candidat.vowsPerRound.get(round) + 1);
+				}
+			}
 	}
 
 	/**
 	 * Eliminate candidat
 	 */
-	 public void proceedElimination(Vector<Candidat> v, int round) {
-		 int k =0;
-		for(int i=0; i<v.size(); i++){
-			if(v.get(i)==getCandidatToEliminate())v.get(i).isEliminated=true;
+	public void proceedElimination(Vector<Candidat> v) {
+
+		for (int i = 0; i < v.size(); i++) {
+			if (v.get(i).vows == getCandidatToEliminate().vows
+					&& !v.get(i).isEliminated)
+				v.get(i).isEliminated = true;
 		}
-	 }
+	}
 
 	public Candidat getCandidatToEliminate() {
 
-		// v will contain candidats to eliminate if there is more than one
-		Vector<Candidat> v = new Vector<Candidat>();
 		Candidat candidat = new Candidat();
 		Candidat toEliminate = new Candidat();
-		
-		for (int i = 0; i < Candidats.size(); i++){
-			if(!Candidats.elementAt(i).isEliminated)
-		toEliminate = Candidats.elementAt(i);
+
+		for (int i = 0; i < Candidats.size(); i++) {
+			if (!Candidats.elementAt(i).isEliminated)
+				toEliminate = Candidats.elementAt(i);
 		}
 
 		/**
 		 * Find the candidat with the lowest vow depending on the round
 		 */
+
 		for (int i = 0; i < Candidats.size(); i++) {
 			candidat = Candidats.elementAt(i);
-			if (! candidat.isEliminated && candidat.vows < toEliminate.vows ){
+			if (!candidat.isEliminated && candidat.vows < toEliminate.vows) {
 				toEliminate = candidat;
-				candidat.isEliminated = true;
 			}
-			// System.out.println(toEliminate);
 
 		}
-		/**
-		 * If there is more than one candidat to elimonate
-		 * add all of them to the vector v:
-		 */
-		for (int i = 0; i < Candidats.size(); i++)
-			if (Candidats.elementAt(i).vows == toEliminate.vows)
-				v.add(Candidats.elementAt(i));
-		System.out.println("V= " + v);
-			
-		/**
-		 * Find the most disliked candidat in vector V
-		 */
-		toEliminate = v.firstElement();
-		int k = Candidats.size() -1;
-		for(int i = 0; i < v.size(); i++)
-			if(v.elementAt(i).vowsPerRound.get(k)>toEliminate.vowsPerRound.get(k))
-				toEliminate = v.elementAt(i);
-				
+		
+
 		return toEliminate;
 	}
 
 	public Candidat winner() {
-		Candidat winner = Candidats.firstElement();
-		Candidat candidat = new Candidat();
+		Candidat winner = new Candidat();
 
 		for (int i = 0; i < Candidats.size(); i++) {
-			candidat = Candidats.elementAt(i);
-			if (candidat.vows > winner.vows)
-				winner = candidat;
-
+			if(!Candidats.elementAt(i).isEliminated)winner = Candidats.elementAt(i);
 		}
 		return winner;
 	}
