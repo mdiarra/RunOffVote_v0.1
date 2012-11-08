@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>RunOffVote_v0.1</name>
+=======
+	<name>RunOffVote</name>
+>>>>>>> ca02cd2c50c9f7791695be645d8b3017371f3283
 	<comment></comment>
 	<projects>
 	</projects>

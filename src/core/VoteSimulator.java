@@ -9,6 +9,7 @@ import java.util.Vector;
 public class VoteSimulator {
 	
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		int numberOfCandidats = 6;
 		int numberOfVoters = 200;
 		Vector<String> v = generateVotes(numberOfCandidats, numberOfVoters);
@@ -18,6 +19,14 @@ public class VoteSimulator {
 			output = new PrintWriter(new FileWriter("voteSimulation.txt",false));
 			for(int i = 0; i<v.size(); i++){
 			output = new PrintWriter(new FileWriter("voteSimulation.txt",true));
+=======
+		Vector<String> v = generateVotes(6, 100);
+		
+		PrintWriter output;
+		try{
+			for(int i = 0; i<v.size(); i++){
+			output = new PrintWriter(new FileWriter("voteFile.txt",true));
+>>>>>>> ca02cd2c50c9f7791695be645d8b3017371f3283
 			output.printf("%s\r\n", v.elementAt(i));
 			
 			output.close();
@@ -27,8 +36,13 @@ public class VoteSimulator {
 			e.printStackTrace();
 		}
 
+<<<<<<< HEAD
 		System.out.println("simulation saved in 'voteSimulation.txt' !");
 		System.out.println(numberOfVoters + " votes for " + numberOfCandidats + " candidats");
+=======
+		
+		System.out.println(generateVotes(6,2));
+>>>>>>> ca02cd2c50c9f7791695be645d8b3017371f3283
 
 	}
 
